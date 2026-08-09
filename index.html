@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Diffraction — a fast, client-side tool for comparing two blocks of text or code.">
+  <title>Diffraction — compare text &amp; code</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "diff": "https://esm.sh/diff@9.0.0"
+    }
+  }
+  </script>
+</head>
+<body>
+  <header class="container">
+    <hgroup class="hero">
+      <h1>Diffraction</h1>
+      <p>Compare two blocks of text or code, instantly — nothing ever leaves your browser.</p>
+    </hgroup>
+  </header>
+
+  <main class="container">
+    <div class="toolbar">
+      <div class="toolbar-actions">
+        <button id="swap-btn" type="button" class="secondary" title="Swap Original and Changed">⇄ Swap</button>
+        <button id="clear-btn" type="button" class="secondary">Clear</button>
+        <button id="copy-btn" type="button" class="secondary">Copy result</button>
+      </div>
+      <div class="toolbar-options">
+        <label for="ignore-whitespace">
+          <input type="checkbox" id="ignore-whitespace">
+          Ignore whitespace
+        </label>
+        <label for="ignore-case">
+          <input type="checkbox" id="ignore-case">
+          Ignore case
+        </label>
+      </div>
+    </div>
+
+    <div class="input-grid">
+      <div>
+        <label for="original-input">Original</label>
+        <textarea id="original-input" rows="10" spellcheck="false" placeholder="Paste the original text or code…"></textarea>
+      </div>
+      <div>
+        <label for="changed-input">Changed</label>
+        <textarea id="changed-input" rows="10" spellcheck="false" placeholder="Paste the changed text or code…"></textarea>
+      </div>
+    </div>
+
+    <section id="diff-output" class="diff-output" aria-live="polite">
+      <p class="empty-state">Start typing above to see the differences.</p>
+    </section>
+  </main>
+
+  <footer class="container">
+    <small>
+      <a href="https://github.com/maccuaa/diffraction" target="_blank" rel="noopener">Source on GitHub</a>
+      · MIT licensed · No data ever leaves your browser
+    </small>
+  </footer>
+
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

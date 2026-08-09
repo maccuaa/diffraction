@@ -1,0 +1,13 @@
+{
+  "name": "diffraction",
+  "version": "1.0.0",
+  "description": "A client-side tool for comparing two blocks of text or code and highlighting their differences.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "diff": "^9.0.0"
+  }
+}

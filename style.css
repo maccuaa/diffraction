@@ -1,0 +1,167 @@
+/* Diffraction — custom theme layered on top of Pico CSS */
+
+.hero {
+  text-align: center;
+  padding-block: 1rem;
+}
+
+.hero h1 {
+  display: inline-block;
+  font-size: 2.5rem;
+  margin-bottom: 0.25rem;
+  background: linear-gradient(
+    90deg,
+    #e63946 0%,
+    #f4a261 20%,
+    #e9c46a 40%,
+    #2a9d8f 60%,
+    #457b9d 80%,
+    #7b4fa0 100%
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.hero p {
+  color: var(--pico-muted-color);
+}
+
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.toolbar-actions,
+.toolbar-options {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 0;
+}
+
+.toolbar-actions button {
+  width: auto;
+  margin: 0;
+}
+
+.toolbar-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  white-space: nowrap;
+}
+
+.input-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.input-grid textarea {
+  font-family: var(--pico-font-family-monospace, monospace);
+  font-size: 0.85rem;
+  tab-size: 2;
+}
+
+.diff-output {
+  border: var(--pico-border-width) solid var(--pico-muted-border-color);
+  border-radius: var(--pico-border-radius);
+  overflow: hidden;
+}
+
+.empty-state {
+  margin: 0;
+  padding: 2rem;
+  text-align: center;
+  color: var(--pico-muted-color);
+}
+
+.diff-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.diff-row {
+  display: contents;
+}
+
+.diff-cell {
+  padding: 0.15rem 0.75rem;
+  font-family: var(--pico-font-family-monospace, monospace);
+  font-size: 0.85rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+  tab-size: 2;
+  border-bottom: 1px solid var(--pico-muted-border-color);
+}
+
+.diff-row:first-child .diff-cell {
+  border-top: none;
+}
+
+.diff-cell--unchanged {
+  background: transparent;
+}
+
+.diff-cell--removed {
+  background: #fdecea;
+  color: #7a1f1f;
+}
+
+.diff-cell--added {
+  background: #e6f6ec;
+  color: #1b5e2e;
+}
+
+.diff-cell--modified {
+  background: #fff6da;
+  color: #6b5300;
+}
+
+.diff-cell--blank {
+  background: repeating-linear-gradient(
+    45deg,
+    var(--pico-muted-border-color),
+    var(--pico-muted-border-color) 4px,
+    transparent 4px,
+    transparent 10px
+  );
+  opacity: 0.35;
+}
+
+@media (prefers-color-scheme: dark) {
+  .diff-cell--removed {
+    background: #3d1a1a;
+    color: #f4b8b8;
+  }
+
+  .diff-cell--added {
+    background: #113322;
+    color: #a9e6bf;
+  }
+
+  .diff-cell--modified {
+    background: #3a3110;
+    color: #f2df9a;
+  }
+}
+
+@media (max-width: 768px) {
+  .input-grid,
+  .diff-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .diff-row {
+    display: block;
+    border-bottom: 2px solid var(--pico-muted-border-color);
+  }
+}

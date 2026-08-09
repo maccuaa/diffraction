@@ -1,0 +1,3 @@
+# No build step: plain HTML/CSS/JS served directly
+
+Diffraction is a small, purely client-side app, so we skip bundlers entirely: plain `index.html`, `style.css`, and ES module `src/` files, with jsdiff and Pico CSS loaded via CDN (jsdiff through an import map pointing at esm.sh, Pico via a `<link>` tag). This keeps the project dependency-free and lets GitHub Pages serve the repository's files directly with zero CI/build pipeline. The only npm dependency (`diff`, as a devDependency) exists purely to run the unit tests under Node and is never shipped to the browser. Revisit if the project grows enough to need module bundling, minification, or TypeScript.
