@@ -126,6 +126,22 @@
   color: #6b5300;
 }
 
+.diff-cell--modified mark.char-removed,
+.diff-cell--modified mark.char-added {
+  border-radius: 2px;
+  padding: 0 1px;
+}
+
+.diff-cell--modified mark.char-removed {
+  background: #f5b3b3;
+  color: #5c0000;
+}
+
+.diff-cell--modified mark.char-added {
+  background: #a3e3b6;
+  color: #06401a;
+}
+
 .diff-cell--blank {
   background: repeating-linear-gradient(
     45deg,
@@ -151,6 +167,16 @@
   .diff-cell--modified {
     background: #3a3110;
     color: #f2df9a;
+  }
+
+  .diff-cell--modified mark.char-removed {
+    background: #7a2828;
+    color: #ffd6d6;
+  }
+
+  .diff-cell--modified mark.char-added {
+    background: #1f5c34;
+    color: #d3ffe0;
   }
 }
 

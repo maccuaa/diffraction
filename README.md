@@ -7,6 +7,7 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 ## Features
 
 - Live, side-by-side diffing as you type
+- Character-level highlighting within changed lines (e.g. spot exactly which part of a docker-compose image SHA changed)
 - Ignore-whitespace and ignore-case toggles
 - Swap, Clear, and Copy-result actions
 - Works entirely client-side — nothing is uploaded anywhere

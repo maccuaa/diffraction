@@ -20,11 +20,20 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
-function renderCell(text, type) {
+function renderSegments(segments, markClass) {
+  return segments
+    .map((segment) =>
+      segment.changed ? `<mark class="${markClass}">${escapeHtml(segment.text)}</mark>` : escapeHtml(segment.text),
+    )
+    .join('');
+}
+
+function renderCell(text, type, segments, markClass) {
   if (text === null) {
     return '<div class="diff-cell diff-cell--blank" aria-hidden="true"></div>';
   }
-  return `<div class="diff-cell diff-cell--${type}">${escapeHtml(text)}</div>`;
+  const content = segments ? renderSegments(segments, markClass) : escapeHtml(text);
+  return `<div class="diff-cell diff-cell--${type}">${content}</div>`;
 }
 
 function renderDiff(rows) {
@@ -37,8 +46,8 @@ function renderDiff(rows) {
 
   const rowsHtml = rows
     .map((row) => {
-      const originalCell = renderCell(row.original, row.type);
-      const changedCell = renderCell(row.changed, row.type);
+      const originalCell = renderCell(row.original, row.type, row.originalSegments, 'char-removed');
+      const changedCell = renderCell(row.changed, row.type, row.changedSegments, 'char-added');
       return `<div class="diff-row">${originalCell}${changedCell}</div>`;
     })
     .join('');
