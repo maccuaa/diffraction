@@ -20,6 +20,13 @@ function escapeHtml(text) {
     .replace(/>/g, '&gt;');
 }
 
+function renderCell(text, type) {
+  if (text === null) {
+    return '<div class="diff-cell diff-cell--blank" aria-hidden="true"></div>';
+  }
+  return `<div class="diff-cell diff-cell--${type}">${escapeHtml(text)}</div>`;
+}
+
 function renderDiff(rows) {
   lastRows = rows;
 
@@ -30,14 +37,8 @@ function renderDiff(rows) {
 
   const rowsHtml = rows
     .map((row) => {
-      const originalCell =
-        row.original === null
-          ? '<div class="diff-cell diff-cell--blank" aria-hidden="true"></div>'
-          : `<div class="diff-cell diff-cell--${row.type}">${escapeHtml(row.original)}</div>`;
-      const changedCell =
-        row.changed === null
-          ? '<div class="diff-cell diff-cell--blank" aria-hidden="true"></div>'
-          : `<div class="diff-cell diff-cell--${row.type}">${escapeHtml(row.changed)}</div>`;
+      const originalCell = renderCell(row.original, row.type);
+      const changedCell = renderCell(row.changed, row.type);
       return `<div class="diff-row">${originalCell}${changedCell}</div>`;
     })
     .join('');

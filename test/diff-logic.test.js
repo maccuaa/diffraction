@@ -68,3 +68,11 @@ test('two empty texts produce no rows', () => {
   const rows = computeDiff('', '');
   assert.deepEqual(rows, []);
 });
+
+test('CRLF and LF line endings are normalized, not treated as content differences', () => {
+  const rows = computeDiff('foo\r\nbar\r\n', 'foo\nbar\n');
+  assert.deepEqual(rows, [
+    { type: 'unchanged', original: 'foo', changed: 'foo' },
+    { type: 'unchanged', original: 'bar', changed: 'bar' },
+  ]);
+});

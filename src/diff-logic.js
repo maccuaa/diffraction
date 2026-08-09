@@ -3,9 +3,11 @@ import { diffArrays } from 'diff';
 /**
  * Splits text into an array of lines, dropping the trailing empty
  * element left by a final newline (or by an entirely empty string).
+ * CRLF line endings are normalized to LF first, so two texts that only
+ * differ in line-ending style aren't reported as changed on every line.
  */
 function splitLines(text) {
-  const lines = text.split('\n');
+  const lines = text.replace(/\r\n/g, '\n').split('\n');
   if (lines[lines.length - 1] === '') lines.pop();
   return lines;
 }
