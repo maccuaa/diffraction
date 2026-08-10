@@ -11,8 +11,6 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 
 **[Try it live](https://maccuaa.github.io/diffraction/)**
 
-![Diffraction screenshot: a character-level highlighted diff of a docker-compose image SHA change](./docs/images/screenshot.png)
-
 ## Features
 
 - ⚡ Live, side-by-side diffing as you type
