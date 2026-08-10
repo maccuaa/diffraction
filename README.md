@@ -1,7 +1,11 @@
-# Diffraction
+<h1 align="center">
+  <img src="./docs/images/wordmark.png" alt="Diffraction" height="56">
+</h1>
 
-[![License](https://img.shields.io/github/license/maccuaa/diffraction)](./LICENSE)
-[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://maccuaa.github.io/diffraction/)
+<p align="center">
+  <a href="./LICENSE"><img src="https://img.shields.io/github/license/maccuaa/diffraction" alt="License"></a>
+  <a href="https://maccuaa.github.io/diffraction/"><img src="https://img.shields.io/badge/demo-live-brightgreen" alt="Live Demo"></a>
+</p>
 
 A fast, client-side tool for comparing two blocks of text or code and highlighting their differences. No server, no build step, no data ever leaves your browser.
 
@@ -11,11 +15,11 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 
 ## Features
 
-- Live, side-by-side diffing as you type
-- Character-level highlighting within changed lines (e.g. spot exactly which part of a docker-compose image SHA changed)
-- Ignore-whitespace and ignore-case toggles
-- Swap, Clear, and Copy-result actions
-- Works entirely client-side — nothing is uploaded anywhere
+- ⚡ Live, side-by-side diffing as you type
+- 🔍 Character-level highlighting within changed lines (e.g. spot exactly which part of a docker-compose image SHA changed)
+- 🎛️ Ignore-whitespace and ignore-case toggles
+- 🔁 Swap, Clear, and Copy-result actions
+- 🔒 Works entirely client-side — nothing is uploaded anywhere
 
 ## How it works
 
