@@ -1,8 +1,13 @@
 # Diffraction
 
+[![License](https://img.shields.io/github/license/maccuaa/diffraction)](./LICENSE)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://maccuaa.github.io/diffraction/)
+
 A fast, client-side tool for comparing two blocks of text or code and highlighting their differences. No server, no build step, no data ever leaves your browser.
 
 **[Try it live](https://maccuaa.github.io/diffraction/)**
+
+![Diffraction screenshot: a character-level highlighted diff of a docker-compose image SHA change](./docs/images/screenshot.png)
 
 ## Features
 
@@ -11,6 +16,10 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 - Ignore-whitespace and ignore-case toggles
 - Swap, Clear, and Copy-result actions
 - Works entirely client-side — nothing is uploaded anywhere
+
+## How it works
+
+Plain HTML, CSS, and ES modules — no bundler, no framework, no build step. GitHub Pages serves this repo's `main` branch directly, so there's no separate deploy pipeline either.
 
 ## Running locally
 
