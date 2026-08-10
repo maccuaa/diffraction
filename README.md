@@ -19,7 +19,7 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 - 🔁 Swap, Clear, and Copy-result actions
 - 🔒 Works entirely client-side — nothing is uploaded anywhere
 - ⚙️ Powered by [jsdiff](https://github.com/kpdecker/jsdiff) and [Pico CSS](https://picocss.com/)
-- 🪶 Fast, simple architecture — plain HTML, CSS, and JS
+- 🚀 Fast, simple architecture — plain HTML, CSS, and JS
 
 ## Running locally
 
