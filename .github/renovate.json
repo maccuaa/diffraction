@@ -1,0 +1,19 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["github>maccuaa/renovate-config"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^index\\.html$/"],
+      "matchStrings": ["esm\\.sh/diff@(?<currentValue>[^\"'/]+)"],
+      "datasourceTemplate": "npm",
+      "depNameTemplate": "diff"
+    }
+  ],
+  "packageRules": [
+    {
+      "matchDepNames": ["diff"],
+      "groupName": "diff"
+    }
+  ]
+}
