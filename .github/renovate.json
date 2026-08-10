@@ -1,19 +1,11 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["github>maccuaa/renovate-config"],
-  "customManagers": [
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/^index\\.html$/"],
-      "matchStrings": ["esm\\.sh/diff@(?<currentValue>[^\"'/]+)"],
-      "datasourceTemplate": "npm",
-      "depNameTemplate": "diff"
-    }
-  ],
   "packageRules": [
     {
-      "matchDepNames": ["diff"],
-      "groupName": "diff"
+      "matchDepNames": ["diff", "jsdiff"],
+      "groupName": "diff",
+      "description": "Keeps the npm 'diff' devDependency (used by tests) and the cdnjs 'jsdiff' <script> tag (used by the browser, see index.html) on the same version, in one PR."
     }
   ]
 }
