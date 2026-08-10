@@ -18,13 +18,8 @@ A fast, client-side tool for comparing two blocks of text or code and highlighti
 - 🎛️ Ignore-whitespace and ignore-case toggles
 - 🔁 Swap, Clear, and Copy-result actions
 - 🔒 Works entirely client-side — nothing is uploaded anywhere
-
-## How it works
-
-- No build step — plain HTML, CSS, and ES modules, served as-is
-- [jsdiff](https://github.com/kpdecker/jsdiff) computes the diff; the rendering and highlighting are hand-rolled
-- [Pico CSS](https://picocss.com/) provides base styling, with a small custom theme layered on top
-- Only the diff engine (`src/diff-logic.js`) is unit tested — the DOM/UI wiring is untested by design
+- ⚙️ Powered by [jsdiff](https://github.com/kpdecker/jsdiff) and [Pico CSS](https://picocss.com/)
+- 🪶 Fast, simple architecture — plain HTML, CSS, and JS
 
 ## Running locally
 
