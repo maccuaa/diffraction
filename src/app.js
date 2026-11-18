@@ -4,6 +4,8 @@ const originalInput = document.getElementById('original-input');
 const changedInput = document.getElementById('changed-input');
 const ignoreWhitespaceCheckbox = document.getElementById('ignore-whitespace');
 const ignoreCaseCheckbox = document.getElementById('ignore-case');
+const listModeCheckbox = document.getElementById('list-mode');
+const sortListsCheckbox = document.getElementById('sort-lists');
 const diffOutput = document.getElementById('diff-output');
 const swapBtn = document.getElementById('swap-btn');
 const clearBtn = document.getElementById('clear-btn');
@@ -56,9 +58,12 @@ function renderDiff(rows) {
 }
 
 function runDiff() {
+  sortListsCheckbox.disabled = !listModeCheckbox.checked;
   const options = {
     ignoreWhitespace: ignoreWhitespaceCheckbox.checked,
     ignoreCase: ignoreCaseCheckbox.checked,
+    listMode: listModeCheckbox.checked,
+    sortLists: sortListsCheckbox.checked,
   };
   const rows = computeDiff(originalInput.value, changedInput.value, options);
   renderDiff(rows);
@@ -90,6 +95,8 @@ originalInput.addEventListener('input', scheduleDiff);
 changedInput.addEventListener('input', scheduleDiff);
 ignoreWhitespaceCheckbox.addEventListener('change', runDiff);
 ignoreCaseCheckbox.addEventListener('change', runDiff);
+listModeCheckbox.addEventListener('change', runDiff);
+sortListsCheckbox.addEventListener('change', runDiff);
 
 swapBtn.addEventListener('click', () => {
   const temp = originalInput.value;
