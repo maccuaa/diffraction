@@ -97,6 +97,76 @@ function computeCharSegments(originalLine, changedLine, { ignoreCase = false } =
   return { originalSegments, changedSegments };
 }
 
+function listSimilarity(a, b) {
+  const normalize = (line) => Array.from(line.toLowerCase().replace(/[^\p{L}\p{N}]/gu, ''));
+  const x = normalize(a);
+  const y = normalize(b);
+  if (x.join('') === y.join('') && x.length > 0) return 1;
+  if (Math.min(x.length, y.length) < 3) return 0;
+
+  const counts = new Map();
+  for (let i = 1; i < x.length; i++) {
+    const pair = x[i - 1] + x[i];
+    counts.set(pair, (counts.get(pair) || 0) + 1);
+  }
+  let shared = 0;
+  for (let i = 1; i < y.length; i++) {
+    const pair = y[i - 1] + y[i];
+    const count = counts.get(pair) || 0;
+    if (count > 0) {
+      shared++;
+      counts.set(pair, count - 1);
+    }
+  }
+  const shorter = shared / (Math.min(x.length, y.length) - 1);
+  const longer = shared / (Math.max(x.length, y.length) - 1);
+  // shortcut: similarity cannot identify every rename; tune this if real lists need it.
+  return shorter >= 0.5 && longer >= 0.35 ? (shorter + longer) / 2 : 0;
+}
+
+function alignListChanges(originalLines, changedLines, ignoreCase) {
+  if (originalLines.length === 0) {
+    return changedLines.map((changed) => ({ type: 'added', original: null, changed }));
+  }
+  if (changedLines.length === 0) {
+    return originalLines.map((original) => ({ type: 'removed', original, changed: null }));
+  }
+  const width = changedLines.length + 1;
+  const scores = Array.from({ length: originalLines.length + 1 }, () => new Float64Array(width));
+  const matches = Array.from({ length: originalLines.length }, () => new Float64Array(changedLines.length));
+
+  for (let i = originalLines.length - 1; i >= 0; i--) {
+    for (let j = changedLines.length - 1; j >= 0; j--) {
+      const similarity = listSimilarity(originalLines[i], changedLines[j]);
+      matches[i][j] = similarity;
+      scores[i][j] = Math.max(
+        scores[i + 1][j],
+        scores[i][j + 1],
+        similarity > 0 ? similarity + scores[i + 1][j + 1] : 0,
+      );
+    }
+  }
+
+  const rows = [];
+  let i = 0;
+  let j = 0;
+  while (i < originalLines.length || j < changedLines.length) {
+    if (i < originalLines.length && j < changedLines.length &&
+        matches[i][j] > 0 && scores[i][j] === matches[i][j] + scores[i + 1][j + 1]) {
+      const original = originalLines[i++];
+      const changed = changedLines[j++];
+      const { originalSegments, changedSegments } = computeCharSegments(original, changed, { ignoreCase });
+      rows.push({ type: 'modified', original, changed, originalSegments, changedSegments });
+    } else if (i < originalLines.length &&
+        (j === changedLines.length || scores[i + 1][j] >= scores[i][j + 1])) {
+      rows.push({ type: 'removed', original: originalLines[i++], changed: null });
+    } else {
+      rows.push({ type: 'added', original: null, changed: changedLines[j++] });
+    }
+  }
+  return rows;
+}
+
 /**
  * Computes a side-by-side comparison between two texts.
  *
@@ -110,7 +180,7 @@ function computeCharSegments(originalLine, changedLine, { ignoreCase = false } =
  *
  * @param {string} original - The baseline text or code.
  * @param {string} changed - The modified text or code.
- * @param {{ignoreWhitespace?: boolean, ignoreCase?: boolean}} [options]
+ * @param {{ignoreWhitespace?: boolean, ignoreCase?: boolean, listMode?: boolean, sortLists?: boolean}} [options]
  * @returns {Array<{type: 'unchanged'|'modified'|'added'|'removed', original: string|null, changed: string|null, originalSegments?: Array<{text: string, changed: boolean}>, changedSegments?: Array<{text: string, changed: boolean}>}>}
  *   One row per rendered line, aligned for side-by-side display. `modified`
  *   rows additionally carry `originalSegments`/`changedSegments` breaking
@@ -118,9 +188,23 @@ function computeCharSegments(originalLine, changedLine, { ignoreCase = false } =
  *   highlight exactly what changed within the line.
  */
 export function computeDiff(original, changed, options = {}) {
-  const { ignoreWhitespace = false, ignoreCase = false } = options;
-  const originalLines = splitLines(original);
-  const changedLines = splitLines(changed);
+  const { ignoreWhitespace = false, ignoreCase = false, listMode = false, sortLists = false } = options;
+  let originalLines = splitLines(original);
+  let changedLines = splitLines(changed);
+  if (listMode) {
+    originalLines = originalLines.filter((line) => line.trim() !== '');
+    changedLines = changedLines.filter((line) => line.trim() !== '');
+    if (sortLists) {
+      const sortKey = (line) => ignoreWhitespace ? line.trim().replace(/\s+/g, ' ') : line;
+      const compare = (a, b) => {
+        const x = sortKey(a);
+        const y = sortKey(b);
+        return x.toLowerCase().localeCompare(y.toLowerCase()) || (x < y ? -1 : x > y ? 1 : 0);
+      };
+      originalLines.sort(compare);
+      changedLines.sort(compare);
+    }
+  }
   const comparator = buildComparator({ ignoreWhitespace, ignoreCase });
   const parts = diffArrays(originalLines, changedLines, { comparator });
 
@@ -160,17 +244,26 @@ export function computeDiff(original, changed, options = {}) {
       i++;
     }
 
-    const rowCount = Math.max(removedCount, addedCount);
-    for (let j = 0; j < rowCount; j++) {
-      const o = j < removedCount ? originalLines[oldIndex + j] : undefined;
-      const c = j < addedCount ? changedLines[newIndex + j] : undefined;
-      if (o !== undefined && c !== undefined) {
-        const { originalSegments, changedSegments } = computeCharSegments(o, c, { ignoreCase });
-        rows.push({ type: 'modified', original: o, changed: c, originalSegments, changedSegments });
-      } else if (o !== undefined) {
-        rows.push({ type: 'removed', original: o, changed: null });
-      } else {
-        rows.push({ type: 'added', original: null, changed: c });
+    if (listMode) {
+      const listRows = alignListChanges(
+        originalLines.slice(oldIndex, oldIndex + removedCount),
+        changedLines.slice(newIndex, newIndex + addedCount),
+        ignoreCase,
+      );
+      for (const row of listRows) rows.push(row);
+    } else {
+      const rowCount = Math.max(removedCount, addedCount);
+      for (let j = 0; j < rowCount; j++) {
+        const o = j < removedCount ? originalLines[oldIndex + j] : undefined;
+        const c = j < addedCount ? changedLines[newIndex + j] : undefined;
+        if (o !== undefined && c !== undefined) {
+          const { originalSegments, changedSegments } = computeCharSegments(o, c, { ignoreCase });
+          rows.push({ type: 'modified', original: o, changed: c, originalSegments, changedSegments });
+        } else if (o !== undefined) {
+          rows.push({ type: 'removed', original: o, changed: null });
+        } else {
+          rows.push({ type: 'added', original: null, changed: c });
+        }
       }
     }
     oldIndex += removedCount;
